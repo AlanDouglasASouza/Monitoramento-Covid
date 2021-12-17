@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1639705473 source:c:\users\user\desktop\projeto\monitoracovid\monitoramento covid\main.c
+1639707728 source:c:\users\user\desktop\projeto\monitoracovid\monitoramento covid\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

@@ -11,14 +11,14 @@ typedef struct{
 } Usuario;
 Usuario usuario[1];
 
-void login();
+void entrar();
 void cabecalho();
 
 int main()
 {
     setlocale(LC_ALL,"");
     cabecalho();
-    login();
+    entrar();
     return 0;
 }
 
@@ -28,7 +28,7 @@ void cabecalho(){
     printf("\n**********************************************************************\n");
 }
 
-void login(){
+void entrar(){
     char login[30];
     char senha[30];
 
@@ -45,6 +45,7 @@ void login(){
         printf("Usuário logado!");// se os vetores de dentro da struct tiver os mesmos dados do vetor interno da função main, usuário será logado.
         system("cls");
     }else{
-        printf("Login e/ou senha incorretos");
+        printf("\nLogin e/ou senha INCORRETOS! Por favor tente novamente.\n");
+        entrar();
     }
 }
