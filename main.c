@@ -11,14 +11,34 @@ typedef struct{
 } Usuario;
 Usuario usuario[1];
 
+//Struct de Paciente
+typedef struct{
+    char nome[30];
+    long cpf[11];
+    long telefone[11];
+    char rua[100];
+    int numero[6];
+    char bairro[50];
+    char cidade[30];
+    char estado[30];
+    long cep[8];
+    char email[20];
+    int data[8];
+    char comorbidade[50];
+    int op;
+} Paciente;
+Paciente paciente;
+
 void entrar();
 void cabecalho();
+void cadastrar();
 
 int main()
 {
     setlocale(LC_ALL,"");
     cabecalho();
     entrar();
+    cadastrar();
     return 0;
 }
 
@@ -47,5 +67,76 @@ void entrar(){
     }else{
         printf("\nLogin e/ou senha INCORRETOS! Por favor tente novamente.\n");
         entrar();
+    }
+}
+
+void cadastrar(){
+    FILE* cadastro;
+
+    cadastro = fopen ("monitoracovid.txt", "a");
+    if (!cadastro){
+        printf("Problemas na abertura do arquivo\n");
+    } else{
+        do{
+            fflush(stdin);
+            printf("\nNome: ");
+            gets(paciente.nome);
+
+            printf("\nCPF: ");
+            scanf("%ld", &paciente.cpf);
+
+            printf("\nTelefone: ");
+            scanf("%ld", &paciente.telefone);
+
+            fflush(stdin);
+            printf("\nRua: ");
+            gets(paciente.rua);
+
+            printf("\nNúmero: ");
+            scanf("%ld", &paciente.numero);
+
+            fflush(stdin);
+            printf("\nBairro: ");
+            gets(paciente.bairro);
+
+            fflush(stdin);
+            printf("\nCidade: ");
+            gets(paciente.cidade);
+
+            fflush(stdin);
+            printf("\nEstado: ");
+            gets(paciente.estado);
+
+            printf("\nCEP: ");
+            scanf("%ld", &paciente.cep);
+
+           /* printf("\n--------Data de Nascimento--------");
+            printf("\nDia: ");
+            scanf("%d", &nasc.dia);
+
+            printf("\nMês: ");
+            scanf("%d", &nasc.mes);
+
+            printf("\nAno: ");
+            scanf("%d", &nasc.ano);
+
+            printf("\n----------------------------------");
+*/
+            fflush(stdin);
+            printf("\nE-mail: ");
+            gets(paciente.email);
+
+            printf("\nData da consulta: ");
+            scanf("%d", &paciente.data);
+
+            fflush(stdin);
+            printf("\nComorbidade: ");
+            gets(paciente.comorbidade);
+
+            fwrite(&paciente, sizeof(Paciente), 1, cadastro);
+
+            printf("\nDeseja continuar?(s/n)");
+        }while(getche() == 's');
+        fclose(cadastro);
     }
 }
