@@ -23,7 +23,7 @@ typedef struct{
     char estado[30];
     long cep[8];
     char email[20];
-    int data[8];
+    char data[10];
     char comorbidade[50];
     int op;
 } Paciente;
@@ -32,6 +32,7 @@ Paciente paciente;
 void entrar();
 void cabecalho();
 void cadastrar();
+int consulData(char entrada);
 
 int main()
 {
@@ -71,6 +72,7 @@ void entrar(){
 }
 
 void cadastrar(){
+
     FILE* cadastro;
 
     cadastro = fopen ("monitoracovid.txt", "a");
@@ -126,17 +128,43 @@ void cadastrar(){
             printf("\nE-mail: ");
             gets(paciente.email);
 
-            printf("\nData da consulta: ");
-            scanf("%d", &paciente.data);
-
             fflush(stdin);
             printf("\nComorbidade: ");
             gets(paciente.comorbidade);
 
+            fflush(stdin);
+            printf("\nData da consulta: ");
+            gets(paciente.data);
+            //consulData(paciente.data);
+
             fwrite(&paciente, sizeof(Paciente), 1, cadastro);
 
+            printf("\nCadastro realizado com sucesso!");
             printf("\nDeseja continuar?(s/n)");
+
         }while(getche() == 's');
         fclose(cadastro);
     }
+}
+
+int consulData(char *entrada){
+  int i = 0;
+  long data[3];
+  const char delimitador[2] = "/";
+  char *token = strtok(entrada, delimitador);
+
+  // Alimenta o vetor de inteiros
+  while (token != NULL)
+  {
+    data[i++] = strtol(token, NULL, 10);
+    token = strtok(NULL, delimitador);
+  }
+
+  // Realize suas validações. Se alguma não for atingida, retorne '0'
+
+  printf("Dia: %d\n", data[0]);
+  printf("Mes: %d\n", data[1]);
+  printf("Ano: %d\n", data[2]);
+
+  return 0;
 }
