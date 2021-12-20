@@ -24,6 +24,7 @@ typedef struct{
     long cep[8];
     char email[20];
     char data[10];
+    char dataNascimento[10];
     char comorbidade[50];
     int op;
 } Paciente;
@@ -32,7 +33,7 @@ Paciente paciente;
 void entrar();
 void cabecalho();
 void cadastrar();
-int consulData(char entrada);
+void consulData(char entrada[]);
 
 int main()
 {
@@ -73,6 +74,7 @@ void entrar(){
 
 void cadastrar(){
 
+    cabecalho();
     FILE* cadastro;
 
     cadastro = fopen ("monitoracovid.txt", "a");
@@ -80,6 +82,10 @@ void cadastrar(){
         printf("Problemas na abertura do arquivo\n");
     } else{
         do{
+            fflush(stdin);
+            printf("\nData da consulta: ");
+            gets(paciente.data);
+
             fflush(stdin);
             printf("\nNome: ");
             gets(paciente.nome);
@@ -133,9 +139,10 @@ void cadastrar(){
             gets(paciente.comorbidade);
 
             fflush(stdin);
-            printf("\nData da consulta: ");
-            gets(paciente.data);
-            //consulData(paciente.data);
+            printf("\nData de Nascimento: ");
+            gets(paciente.dataNascimento);
+
+            consulData(paciente.data);
 
             fwrite(&paciente, sizeof(Paciente), 1, cadastro);
 
@@ -147,7 +154,7 @@ void cadastrar(){
     }
 }
 
-int consulData(char *entrada){
+void consulData(char entrada[]){
   int i = 0;
   long data[3];
   const char delimitador[2] = "/";
@@ -166,5 +173,5 @@ int consulData(char *entrada){
   printf("Mes: %d\n", data[1]);
   printf("Ano: %d\n", data[2]);
 
-  return 0;
+  return;
 }
