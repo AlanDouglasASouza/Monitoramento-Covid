@@ -40,8 +40,8 @@ void calculaData(char entrada[], int qualData);
 int main()
 {
     setlocale(LC_ALL,"");
-    //cabecalho();
-    //entrar();
+    cabecalho();
+    entrar();
     cadastrar();
     return 0;
 }
@@ -179,5 +179,4 @@ void calculaData(char entrada[], int qualData){
                 printf("\nRISCO\n");
               }
     }
-
 }
