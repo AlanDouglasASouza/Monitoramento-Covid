@@ -30,16 +30,18 @@ typedef struct{
 } Paciente;
 Paciente paciente;
 
+int dataConsulta[3];
+
 void entrar();
 void cabecalho();
 void cadastrar();
-void consulData(char entrada[]);
+void calculaData(char entrada[], int qualData);
 
 int main()
 {
     setlocale(LC_ALL,"");
-    cabecalho();
-    entrar();
+    //cabecalho();
+    //entrar();
     cadastrar();
     return 0;
 }
@@ -86,6 +88,8 @@ void cadastrar(){
             printf("\nData da consulta: ");
             gets(paciente.data);
 
+            calculaData(paciente.data, 0);
+
             fflush(stdin);
             printf("\nNome: ");
             gets(paciente.nome);
@@ -118,18 +122,6 @@ void cadastrar(){
             printf("\nCEP: ");
             scanf("%ld", &paciente.cep);
 
-           /* printf("\n--------Data de Nascimento--------");
-            printf("\nDia: ");
-            scanf("%d", &nasc.dia);
-
-            printf("\nMês: ");
-            scanf("%d", &nasc.mes);
-
-            printf("\nAno: ");
-            scanf("%d", &nasc.ano);
-
-            printf("\n----------------------------------");
-*/
             fflush(stdin);
             printf("\nE-mail: ");
             gets(paciente.email);
@@ -142,7 +134,7 @@ void cadastrar(){
             printf("\nData de Nascimento: ");
             gets(paciente.dataNascimento);
 
-            consulData(paciente.data);
+            calculaData(paciente.dataNascimento, 1);
 
             fwrite(&paciente, sizeof(Paciente), 1, cadastro);
 
@@ -154,24 +146,38 @@ void cadastrar(){
     }
 }
 
-void consulData(char entrada[]){
+void calculaData(char entrada[], int qualData){
   int i = 0;
-  long data[3];
+  int dataNasc[3];
+  int difAno, difMes, difDia;
   const char delimitador[2] = "/";
   char *token = strtok(entrada, delimitador);
 
   // Alimenta o vetor de inteiros
-  while (token != NULL)
-  {
-    data[i++] = strtol(token, NULL, 10);
+  if (qualData == 0){
+    while (token != NULL)
+    {
+    dataConsulta[i++] = atoi(token);
     token = strtok(NULL, delimitador);
-  }
+    }
 
-  // Realize suas validações. Se alguma não for atingida, retorne '0'
+  } else {
+        while (token != NULL){
+            dataNasc[i++] = atoi(token);
+            token = strtok(NULL, delimitador);
+        }
 
-  printf("Dia: %d\n", data[0]);
-  printf("Mes: %d\n", data[1]);
-  printf("Ano: %d\n", data[2]);
+        difAno = dataConsulta[2] - dataNasc[2];
+        difMes = dataConsulta[1] - dataNasc[1];
+        difDia = dataConsulta[0] - dataNasc[0];
 
-  return;
+        if (difAno >= 66){
+            printf("\nRISCO %d\n", difAno);
+        } if (difAno == 65 && difMes < 0){
+            printf("\nRISCO\n");
+           } if (difAno == 65 && difMes == 0 && difDia >= 0){
+                printf("\nRISCO\n");
+              }
+    }
+
 }
