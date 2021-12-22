@@ -1,8 +1,0 @@
-# depslib dependency file v1.0
-1640046702 source:c:\users\user\desktop\projeto\monitoracovid\monitoramento covid\main.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	<locale.h>
-	<conio.h>
-
