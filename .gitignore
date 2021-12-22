@@ -63,6 +63,6 @@ dkms.conf
 bin/
 obj/
 
-monitoracovid.txt
+monitoracovid
 
 # End of https://www.toptal.com/developers/gitignore/api/codeblocks,c
