@@ -21,7 +21,7 @@ typedef struct{
     char bairro[50];
     char cidade[30];
     char estado[30];
-    long cep[8];
+    long cep;
     char email[20];
     char data[10];
     char dataNascimento[10];
@@ -36,12 +36,13 @@ void entrar();
 void cabecalho();
 void cadastrar();
 void calculaData(char entrada[], int qualData);
+void risco(long cep, int idade);
 
 int main()
 {
     setlocale(LC_ALL,"");
-    cabecalho();
-    entrar();
+    //cabecalho();
+    //entrar();
     cadastrar();
     return 0;
 }
@@ -149,7 +150,7 @@ void cadastrar(){
 void calculaData(char entrada[], int qualData){
   int i = 0;
   int dataNasc[3];
-  int difAno, difMes, difDia;
+  int idade, difMes, difDia;
   const char delimitador[2] = "/";
   char *token = strtok(entrada, delimitador);
 
@@ -167,16 +168,35 @@ void calculaData(char entrada[], int qualData){
             token = strtok(NULL, delimitador);
         }
 
-        difAno = dataConsulta[2] - dataNasc[2];
+        idade = dataConsulta[2] - dataNasc[2];
         difMes = dataConsulta[1] - dataNasc[1];
         difDia = dataConsulta[0] - dataNasc[0];
 
-        if (difAno >= 66){
-            printf("\nRISCO %d\n", difAno);
-        } if (difAno == 65 && difMes < 0){
-            printf("\nRISCO\n");
-           } if (difAno == 65 && difMes == 0 && difDia >= 0){
-                printf("\nRISCO\n");
-              }
+        if (difMes < 0){
+            idade--;
+        } else if (difMes == 0 && difDia <= 0 ){
+            idade--;
+        }
+        if (idade >= 65){
+            risco(paciente.cep, idade);
+            printf("\nGRUPO DE RISCO %d", idade);
+        }
+    }
+}
+
+void risco(long cep, int idade){
+    FILE* grupoRisco;
+    int result;
+
+    grupoRisco = fopen("grupoderisco.txt", "a");
+    if (!grupoRisco){
+        printf("Erro na abertura do arquivo");
+    } else {
+        result = fprintf(grupoRisco, "\nIdade: %d CEP: %d", idade, cep);
+        if (result == EOF){
+            printf("\nErro na gravação do arquivo 'grupo de risco'\n");
+        }
+
+        fclose(grupoRisco);
     }
 }

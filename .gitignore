@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/codeblocks,c
 # Edit at https://www.toptal.com/developers/gitignore?templates=codeblocks,c
 
+
+
 ### C ###
 # Prerequisites
 *.d
@@ -63,6 +65,7 @@ dkms.conf
 bin/
 obj/
 
+grupoderisco.txt
 monitoracovid.txt
 
 # End of https://www.toptal.com/developers/gitignore/api/codeblocks,c
