@@ -3,6 +3,7 @@
 #include <string.h>
 #include <locale.h>
 #include <conio.h>
+#include <ctype.h>
 
 //Struct de login
 typedef struct{
@@ -31,12 +32,16 @@ typedef struct{
 Paciente paciente;
 
 int dataConsulta[3];
+int dataNasc[3];
+int idade = 0;
 
 void entrar();
 void cabecalho();
 void cadastrar();
 void calculaData(char entrada[], int qualData);
 void risco(long cep, int idade);
+int validaChar(char entrada[]);
+int validaData(char diaV[]);
 
 int main()
 {
@@ -85,15 +90,20 @@ void cadastrar(){
         printf("Problemas na abertura do arquivo\n");
     } else{
         do{
-            fflush(stdin);
-            printf("\nData da consulta: ");
-            gets(paciente.data);
+            do{
+                fflush(stdin);
+                printf("\nData da consulta: ");
+                gets(paciente.data);
+                //calculaData(paciente.data, 0);
+            }while(validaData(paciente.data) == 0);
 
             calculaData(paciente.data, 0);
 
-            fflush(stdin);
-            printf("\nNome: ");
-            gets(paciente.nome);
+            do{
+                fflush(stdin);
+                printf("\nNome: ");
+                gets(paciente.nome);
+            }while(validaChar(paciente.nome) == 0);
 
             printf("\nCPF: ");
             scanf("%ld", &paciente.cpf);
@@ -101,24 +111,32 @@ void cadastrar(){
             printf("\nTelefone: ");
             scanf("%ld", &paciente.telefone);
 
-            fflush(stdin);
-            printf("\nRua: ");
-            gets(paciente.rua);
+            do{
+                fflush(stdin);
+                printf("\nRua: ");
+                gets(paciente.rua);
+            }while(validaChar(paciente.rua) == 0);
 
             printf("\nNúmero: ");
             scanf("%ld", &paciente.numero);
 
-            fflush(stdin);
-            printf("\nBairro: ");
-            gets(paciente.bairro);
+            do{
+                fflush(stdin);
+                printf("\nBairro: ");
+                gets(paciente.bairro);
+            }while(validaChar(paciente.rua) == 0);
 
-            fflush(stdin);
-            printf("\nCidade: ");
-            gets(paciente.cidade);
+            do{
+                fflush(stdin);
+                printf("\nCidade: ");
+                gets(paciente.cidade);
+            }while(validaChar(paciente.cidade) == 0);
 
-            fflush(stdin);
-            printf("\nEstado: ");
-            gets(paciente.estado);
+            do{
+                fflush(stdin);
+                printf("\nEstado: ");
+                gets(paciente.estado);
+            }while(validaChar(paciente.estado) == 0);
 
             printf("\nCEP: ");
             scanf("%ld", &paciente.cep);
@@ -127,15 +145,20 @@ void cadastrar(){
             printf("\nE-mail: ");
             gets(paciente.email);
 
-            fflush(stdin);
-            printf("\nComorbidade: ");
-            gets(paciente.comorbidade);
+            do{
+                fflush(stdin);
+                printf("\nComorbidade: ");
+                gets(paciente.comorbidade);
+            }while(validaChar(paciente.comorbidade) == 0);
 
-            fflush(stdin);
-            printf("\nData de Nascimento: ");
-            gets(paciente.dataNascimento);
+            do{
+                fflush(stdin);
+                printf("\nData de Nascimento: ");
+                gets(paciente.dataNascimento);
+                calculaData(paciente.dataNascimento, 1);
+            }while(validaData(paciente.dataNascimento) == 0);
 
-            calculaData(paciente.dataNascimento, 1);
+            //calculaData(paciente.dataNascimento, 1);
 
             fwrite(&paciente, sizeof(Paciente), 1, cadastro);
 
@@ -149,8 +172,7 @@ void cadastrar(){
 
 void calculaData(char entrada[], int qualData){
   int i = 0;
-  int dataNasc[3];
-  int idade, difMes, difDia;
+  int difMes, difDia;
   const char delimitador[2] = "/";
   char *token = strtok(entrada, delimitador);
 
@@ -199,4 +221,44 @@ void risco(long cep, int idade){
 
         fclose(grupoRisco);
     }
+}
+
+int validaChar (char entrada[]){
+    int i;
+
+    for(i=0; entrada[i] != '\0'; i++){
+        if (isalpha(entrada[i]) == 0){
+            break;
+        }
+    }
+    if (entrada[i] != '\0'){
+    printf("\nCaracteres inválidos! Por favor insira somente letras nesse campo.\n");
+    return 0;
+    } else {
+        return 1;
+    }
+}
+
+int validaData (char diaV[]){
+    int i;
+    int dataTam = strlen(diaV);
+
+    printf("\nVem assim %s", diaV);
+
+    for(i=0; i < dataTam; i++){
+        if (isalpha(diaV[i]) > 0 || dataTam != 10){
+            printf("\nA formatação da data é inválida! Por favor insira novamente caiu 1.\n");
+            return 0;
+            break;
+        }/* if (dataConsulta[0] > 31 || dataConsulta[1] > 12){
+            printf("\nA formatação da data é inválida! Por favor insira novamente caiu 2.\n");
+            return 0;
+            break;
+        } if (dataNasc[0] > 31 || dataNasc[1] > 12){
+            printf("\nA formatação da data é inválida! Por favor insira novamente.\n");
+            return 0;
+            break;
+        }*/
+    }
+    return 1;
 }
