@@ -15,7 +15,7 @@ Usuario usuario[1];
 //Struct de Paciente
 typedef struct{
     char nome[30];
-    long cpf[11];
+    char cpf[11];
     char telefone[11];
     char rua[100];
     char numero[6];
@@ -42,6 +42,9 @@ int calculaData(char entrada[], int qualData);
 void risco(char cep[], int idade);
 int validaChar(char entrada[]);
 int validaNumero(char diaV[]);
+int validaEmail(char email[]);
+int validarCPF(char *cpf);
+void imprimir();
 
 int main()
 {
@@ -49,6 +52,7 @@ int main()
     cabecalho();
     entrar();
     cadastrar();
+    //imprimir();
     return 0;
 }
 
@@ -91,6 +95,7 @@ void cadastrar(){
         printf("Problemas na abertura do arquivo\n");
     } else{
         do{
+
             do{
                 fflush(stdin);
                 printf("\nData da consulta: ");
@@ -104,9 +109,11 @@ void cadastrar(){
                 gets(paciente.nome);
             }while(validaChar(paciente.nome) == 0);
 
-
-            printf("\nCPF: ");
-            scanf("%ld", &paciente.cpf);
+            do{
+                fflush(stdin);
+                printf("\nCPF: ");
+                gets(paciente.cpf);
+            }while(validarCPF(paciente.cpf) == 0);
 
             do{
                 fflush(stdin);
@@ -124,7 +131,7 @@ void cadastrar(){
                 fflush(stdin);
                 printf("\nNúmero: ");
                 gets(paciente.numero);
-            }while(validaChar(paciente.numero) == 0);
+            }while(validaNumero(paciente.numero) == 0);
 
             do{
                 fflush(stdin);
@@ -148,11 +155,13 @@ void cadastrar(){
                 fflush(stdin);
                 printf("\nCEP: ");
                 gets(paciente.cep);
-            }while(validaChar(paciente.cep) == 0);
+            }while(validaNumero(paciente.cep) == 0);
 
-            fflush(stdin);
-            printf("\nE-mail: ");
-            gets(paciente.email);
+            do{
+                fflush(stdin);
+                printf("\nE-mail: ");
+                gets(paciente.email);
+            }while(validaEmail(paciente.email) == 0);
 
             do{
                 fflush(stdin);
@@ -166,8 +175,6 @@ void cadastrar(){
                 gets(paciente.dataNascimento);
                 strcpy(copyNasc, paciente.dataNascimento);
             }while(calculaData(copyNasc, 1) == 0);
-
-            //calculaData(paciente.dataNascimento, 1);
 
             fwrite(&paciente, sizeof(Paciente), 1, cadastro);
 
@@ -300,3 +307,78 @@ int validaNumero (char diaV[]){
     }
     return 1;
 }
+
+int validaEmail(char email[]){
+    int i;
+    char com[5] = ".com";
+    char arroba[2] = "@";
+
+    printf("\nEsta assim: %s", email);
+
+    for(i=0; email[i] != '\0'; i++){
+        if (isspace(email[i]) != 0){
+        printf("\nE-mail inválido! Por favor insira novamente.");
+            return 0;
+        }
+    }
+
+    if (strstr(email, arroba) == NULL || strstr(email, com) == NULL){
+        printf("\nE-mail inválido! Por favor insira novamente.");
+        return 0;
+    }
+    return 1;
+}
+
+int validarCPF(char *cpf)
+{
+    int i, j, digito1 = 0, digito2 = 0;
+    if(strlen(cpf) != 11){
+        printf("\nCPF inválido! Por favor insira novamente.\n");
+        return 0;}
+    else if((strcmp(cpf,"00000000000") == 0) || (strcmp(cpf,"11111111111") == 0) || (strcmp(cpf,"22222222222") == 0) ||
+            (strcmp(cpf,"33333333333") == 0) || (strcmp(cpf,"44444444444") == 0) || (strcmp(cpf,"55555555555") == 0) ||
+            (strcmp(cpf,"66666666666") == 0) || (strcmp(cpf,"77777777777") == 0) || (strcmp(cpf,"88888888888") == 0) ||
+            (strcmp(cpf,"99999999999") == 0)){
+        printf("\nCPF inválido! Por favor insira novamente.\n");
+        return 0;} ///se o CPF tiver todos os números iguais ele é inválido.
+    else
+    {
+        ///digito 1---------------------------------------------------
+        for(i = 0, j = 10; i < strlen(cpf)-2; i++, j--) ///multiplica os números de 10 a 2 e soma os resultados dentro de digito1
+            digito1 += (cpf[i]-48) * j;
+        digito1 %= 11;
+        if(digito1 < 2)
+            digito1 = 0;
+        else
+            digito1 = 11 - digito1;
+        if((cpf[9]-48) != digito1){
+            printf("\nCPF inválido! Por favor insira novamente.\n");
+            return 0;} ///se o digito 1 não for o mesmo que o da validação CPF é inválido
+        else
+        ///digito 2--------------------------------------------------
+        {
+            for(i = 0, j = 11; i < strlen(cpf)-1; i++, j--) ///multiplica os números de 11 a 2 e soma os resultados dentro de digito2
+                    digito2 += (cpf[i]-48) * j;
+        digito2 %= 11;
+        if(digito2 < 2){
+            digito2 = 0;}
+        else{
+            digito2 = 11 - digito2;}
+        if((cpf[10]-48) != digito2){
+            printf("\nCPF inválido! Por favor insira novamente.\n");
+            return 0;} ///se o digito 2 não for o mesmo que o da validação CPF é inválido
+        }
+    }
+    return 1;
+}
+/*
+void imprimir(){
+    printf("\nData da consulta: %s", paciente.data);
+    printf("\nNome: %s", paciente.nome);
+    printf("\nCPF: %s", paciente.cpf);
+    printf("\nTelefone: %s", paciente.telefone);
+    printf("\nRua: %s", paciente.rua);
+    printf("\nNúmero: %s", paciente.numero);
+    printf("\nBairro: %s", paciente.bairro);
+    printf("\nCidade: %s", paciente.cidade);
+}*/
